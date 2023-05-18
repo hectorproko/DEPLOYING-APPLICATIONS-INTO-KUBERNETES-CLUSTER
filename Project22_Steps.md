@@ -9,7 +9,7 @@ Need to put the part of setup
 ### UNDERSTANDING THE CONCEPT
 ### COMMON KUBERNETES OBJECTS
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ aws cloudformation create-stack \
 > --region us-east-1 \
 > --stack-name my-eks-vpc-stack \
@@ -82,11 +82,11 @@ Configuring Computer to communicate with cluster
 
 Deleting current `~/.kube/config` since we already backed it 
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ aws eks update-kubeconfig --profile kube --region us-east-1 --name Project22
 Added new context arn:aws:eks:us-east-1:199055125796:cluster/Project22 to /home/hector/.kube/config
 ```
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl cluster-info
 Kubernetes control plane is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com
 CoreDNS is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
@@ -115,7 +115,7 @@ Everything else defaults
 <details close>
 <summary>Once you delete the Node group, whatever pod was running disappears</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
 apiVersion: v1
 kind: Pod
@@ -151,7 +151,7 @@ Run **kubectl** to connect inside the container
 <details close>
 <summary>kubectl run curl --image=dareyregistry/curl -i --tty</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl run curl --image=dareyregistry/curl -i --tty
 If you don't see a command prompt, try pressing enter.
 / # curl -v 192.168.13.153:80
@@ -204,7 +204,7 @@ Let us create a service to access the **Nginx Pod**
 <details close>
 <summary>cat nginx-service.yaml</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
 apiVersion: v1
 kind: Service
@@ -240,7 +240,7 @@ Deleted the pod, updated the file .yaml aka manifest, applied it gain
 <details close>
 <summary>cat nginx-pod.yaml</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
 apiVersion: v1
 kind: Pod
@@ -282,7 +282,7 @@ Let us create a **rs.yaml** manifest for a ReplicaSet object:
 <details close>
 <summary>Multiple-Output</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          49m
@@ -336,7 +336,7 @@ We can easily scale our ReplicaSet up by specifying the desired number of replic
 <details close>
 <summary>Multiple-Output</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-rs --replicas=5
 replicaset.apps/nginx-rs scaled
 
@@ -351,7 +351,7 @@ hector@hector-Laptop:~/Project22$
 ```
 
 Deleted previous replicaset
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME       DESIRED   CURRENT   READY   AGE
 nginx-rs   5         5         5       29m
@@ -361,7 +361,7 @@ replicaset.apps "nginx-rs" deleted
 hector@hector-Laptop:~/Project22$
 ```
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ cat rs2.yaml
 apiVersion: apps/v1
 kind: ReplicaSet
@@ -404,7 +404,7 @@ nginx-rs   3         3         3       15s   nginx-container   nginx:latest   en
 <details close>
 <summary>Multiple-Output</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
 apiVersion: v1
 kind: Service
@@ -438,7 +438,7 @@ hector@hector-Laptop:~/Project22$
 <details close>
 <summary>kubectl get service nginx-service -o yaml</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl get service nginx-service -o yaml
 apiVersion: v1
 kind: Service
@@ -492,7 +492,7 @@ If I scale to 15 with the name of the replicate set, it is brought down to 3, be
 <details close>
 <summary>Multiple-Output</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
 
@@ -590,7 +590,7 @@ hector@hector-Laptop:~/Project22$
 <details close>
 <summary>Exec into one of the Pod’s container to run Linux commands</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          7m23s
@@ -673,7 +673,7 @@ root@nginx-deployment-5cb44ffccf-4m86n:/#
 <details close>
 <summary>Multiple-Output</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           20m
@@ -705,7 +705,7 @@ How I figured out to scale https://kubernetes.io/docs/concepts/workloads/control
 <details close>
 <summary>kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash</summary>
 
-``` bash
+``` css
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
 root@nginx-deployment-5cb44ffccf-ws8b5:/# apt-get update
@@ -808,7 +808,7 @@ Processing triggers for libc-bin (2.31-13+deb11u3) ...
 <details close>
 <summary>cat /usr/share/nginx/html/index.html</summary>
 
-``` bash
+``` css
 root@nginx-deployment-5cb44ffccf-ws8b5:/# cat /usr/share/nginx/html/index.html
 <!DOCTYPE html>
 <html>
