@@ -310,9 +310,13 @@ See 'kubectl describe --help' for usage.
 **Imperative:**
 We can easily scale our ReplicaSet up by specifying the desired number of replicas in an imperative command, like this:
 
+<details close>
+<summary>Multiple-Output</summary>
+
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-rs --replicas=5
 replicaset.apps/nginx-rs scaled
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          54m
@@ -328,6 +332,7 @@ Deleted previous replicaset
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME       DESIRED   CURRENT   READY   AGE
 nginx-rs   5         5         5       29m
+
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
 hector@hector-Laptop:~/Project22$
@@ -358,18 +363,23 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-          protocol: TCPhector@hector-Laptop:~/Project22$
+          protocol: TCP
+
 hector@hector-Laptop:~/Project22$ kubectl apply -f rs2.yaml
 replicaset.apps/nginx-rs created
+
 hector@hector-Laptop:~/Project22$ kubectl get rs nginx-rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS        IMAGES         SELECTOR
 nginx-rs   3         3         3       15s   nginx-container   nginx:latest   env=prod,tier in (frontend)
-hector@hector-Laptop:~/Project22$
 ```
+</details>
 
 
 
 ### USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
+
+<details close>
+<summary>Multiple-Output</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
@@ -387,17 +397,23 @@ spec:
       targetPort: 80
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service configured
+
 hector@hector-Laptop:~/Project22$ kubectl get service nginx-service
 NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                                                              PORT(S)        AGE
 nginx-service   LoadBalancer   10.100.15.31   a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com   80:30466/TCP   95m
 hector@hector-Laptop:~/Project22$
 ```
+</details>
+
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/createLB.png)
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/description.png)
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/tags.png)  
+
+<details close>
+<summary>kubectl get service nginx-service -o yaml</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl get service nginx-service -o yaml
@@ -439,6 +455,7 @@ status:
     - hostname: a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com
 hector@hector-Laptop:~/Project22$
 ```
+</details>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/testingNginxLoadBalancer.gif)  
 
