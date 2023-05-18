@@ -762,7 +762,8 @@ root@nginx-deployment-5cb44ffccf-ws8b5:/#
 ```
 </details>
 
-
+<details close>
+<summary>cat /usr/share/nginx/html/index.html</summary>
 ``` bash
 root@nginx-deployment-5cb44ffccf-ws8b5:/# cat /usr/share/nginx/html/index.html
 <!DOCTYPE html>
@@ -790,6 +791,7 @@ Commercial support is available at
 </html>
 root@nginx-deployment-5cb44ffccf-ws8b5:/#
 ```
+</details>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/editedPage.png
 )
