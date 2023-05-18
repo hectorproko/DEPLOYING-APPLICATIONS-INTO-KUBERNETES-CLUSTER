@@ -764,6 +764,7 @@ root@nginx-deployment-5cb44ffccf-ws8b5:/#
 
 <details close>
 <summary>cat /usr/share/nginx/html/index.html</summary>
+
 ``` bash
 root@nginx-deployment-5cb44ffccf-ws8b5:/# cat /usr/share/nginx/html/index.html
 <!DOCTYPE html>
