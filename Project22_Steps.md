@@ -56,7 +56,7 @@ We need to specify the IDs of the VPC we want when creating cluster from **AWS C
 <details close>
 <summary>Create Cluster:</summary>
 
-```bash
+```css
 hector@hector-Laptop:~/Project22$ aws eks create-cluster --profile kube --region us-east-1 --name Project22 --kubernetes-version 1.22 \
 >    --role-arn arn:aws:iam::199055125796:role/myAmazonEKSClusterRole \
 >    --resources-vpc-config subnetIds=subnet-039252ecb19e19d4e,subnet-09d3ea8fadca3b869,subnet-0c015424187074885,subnet-040dadfc9ad38ed59
