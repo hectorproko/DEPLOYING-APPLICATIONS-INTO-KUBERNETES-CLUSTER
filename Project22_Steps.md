@@ -1,4 +1,4 @@
-# DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
+clear# DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
 PROJECT 22
 <!--
 Need to put the part of setup
@@ -638,7 +638,7 @@ How I figured out to scale https://kubernetes.io/docs/concepts/workloads/control
 
 
 <details close>
-<summary>Bash code</summary>
+<summary>kubectl get deployment</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl get deployment
