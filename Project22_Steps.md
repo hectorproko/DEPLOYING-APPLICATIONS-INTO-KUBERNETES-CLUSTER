@@ -51,14 +51,11 @@ Click **Create**
 We need to specify the IDs of the VPC we want when creating cluster from **AWS CLI**
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/subnets.png)
 
-Create Cluster:
-``` bash
-aws eks create-cluster --profile kube --region us-east-1 --name Project22 --kubernetes-version 1.22 \
-   --role-arn arn:aws:iam::199055125796:role/myAmazonEKSClusterRole \
-   --resources-vpc-config subnetIds=subnet-039252ecb19e19d4e,subnet-09d3ea8fadca3b869,subnet-0c015424187074885,subnet-040dadfc9ad38ed59
-```
 
-Output:
+
+<details close>
+<summary>Create Cluster:</summary>
+
 ```bash
 hector@hector-Laptop:~/Project22$ aws eks create-cluster --profile kube --region us-east-1 --name Project22 --kubernetes-version 1.22 \
 >    --role-arn arn:aws:iam::199055125796:role/myAmazonEKSClusterRole \
@@ -79,6 +76,7 @@ SUBNETIDS       subnet-0c015424187074885
 SUBNETIDS       subnet-040dadfc9ad38ed59
 hector@hector-Laptop:~/Project22$
 ```
+</details><br>
 
 Configuring Computer to communicate with cluster 
 
@@ -96,6 +94,8 @@ CoreDNS is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 hector@hector-Laptop:~/Project22$
 ```
+
+
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
 The creation of the POD said pending, we still had no workers in the cluster, that might be it, **confirmed**.
@@ -109,9 +109,11 @@ Redoing the Node Group
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/configureNodeGroup.png)
 
+
 Everything else defaults
 
-Once you delete the Node group, whatever pod was running disappears
+<details close>
+<summary>Once you delete the Node group, whatever pod was running disappears</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
@@ -126,22 +128,28 @@ spec:
       ports:
       - containerPort: 80
         protocol: TCP
+
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-pod.yaml
 pod/nginx-pod created
+
 hector@hector-Laptop:~/Project22$ kubectl get pods -o wide
 NAME        READY   STATUS              RESTARTS   AGE   IP       NODE                            NOMINATED NODE   READINESS GATES
 nginx-pod   0/1     ContainerCreating   0          7s    <none>   ip-192-168-10-26.ec2.internal   <none>           <none>
+
 hector@hector-Laptop:~/Project22$ kubectl get pods -o wide
 NAME        READY   STATUS    RESTARTS   AGE   IP               NODE                            NOMINATED NODE   READINESS GATES
 nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26.ec2.internal   <none>           <none>
-hector@hector-Laptop:~/Project22$
 ```
+</details>
 
 
 
 ### ACCESSING THE APP FROM THE BROWSER
 
 Run **kubectl** to connect inside the container
+
+<details close>
+<summary>kubectl run curl --image=dareyregistry/curl -i --tty</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl run curl --image=dareyregistry/curl -i --tty
@@ -187,9 +195,14 @@ Commercial support is available at
 </html>
 / #
 ```
+</details>
+
 
 Let us create a service to access the **Nginx Pod**
 1. Create a Service `yaml` manifest file:
+
+<details close>
+<summary>cat nginx-service.yaml</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
@@ -204,22 +217,28 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service created
+
 hector@hector-Laptop:~/Project22$ kubectl get service
 NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 kubernetes      ClusterIP   10.100.0.1     <none>        443/TCP   56m
 nginx-service   ClusterIP   10.100.15.31   <none>        80/TCP    64s
-hector@hector-Laptop:~/Project22$ kubectl  port-forward svc/nginx-service 8089:80
-^C
+ 
 hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
-hector@hector-Laptop:~/Project22$
 ```
+</details>
+
+
 
 To make this work, you must reconfigure the Pod manifest and introduce **labels** to match the **selectors** key in the field section of the service manifest.
 
 Deleted the pod, updated the file .yaml aka manifest, applied it gain
+
+<details close>
+<summary>cat nginx-pod.yaml</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
@@ -244,6 +263,8 @@ Forwarding from [::1]:8089 -> 80
 Handling connection for 8089
 Handling connection for 8089
 ```
+</details>
+
 
 Then I do lynx `127.0.0.1:8089` and nginx page apears  
 
@@ -258,23 +279,29 @@ Then I do lynx `127.0.0.1:8089` and nginx page apears
 
 Let us create a **rs.yaml** manifest for a ReplicaSet object:
 
+<details close>
+<summary>Multiple-Output</summary>
+
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          49m
 nginx-rs-6qshv   1/1     Running   0          17m
 nginx-rs-ch9tp   1/1     Running   0          17m
+
 hector@hector-Laptop:~/Project22$ kubectl delete pod nginx-rs-ch9tp
 pod "nginx-rs-ch9tp" deleted
-^[[A^[[Ahector@hector-Laptop:~/Project22$ ^Cbectl get pods
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          50m
 nginx-rs-6qshv   1/1     Running   0          18m
 nginx-rs-tqvs8   1/1     Running   0          21s
+
 hector@hector-Laptop:~/Project22$ kubectl get rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES         SELECTOR
 nginx-rs   3         3         3       19m   nginx-pod    nginx:latest   app=nginx-pod
+
 hector@hector-Laptop:~/Project22$ kubectl describe rs nginx-rs
 Name:         nginx-rs
 Namespace:    default
@@ -299,13 +326,9 @@ Events:
   Normal  SuccessfulCreate  19m   replicaset-controller  Created pod: nginx-rs-6qshv
   Normal  SuccessfulCreate  19m   replicaset-controller  Created pod: nginx-rs-ch9tp
   Normal  SuccessfulCreate  106s  replicaset-controller  Created pod: nginx-rs-tqvs8
-hector@hector-Laptop:~/Project22$ kubectl describe rs nginx-rs -o yaml
-error: unknown shorthand flag: 'o' in -o
-See 'kubectl describe --help' for usage.
-hector@hector-Laptop:~/Project22$ kubectl describe rs nginx-rs -o yml
-error: unknown shorthand flag: 'o' in -o
-See 'kubectl describe --help' for usage.
 ```
+</details>
+
 
 **Imperative:**
 We can easily scale our ReplicaSet up by specifying the desired number of replicas in an imperative command, like this:
