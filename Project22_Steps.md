@@ -449,9 +449,13 @@ hector@hector-Laptop:~/Project22$
 
 If I scale to 15 with the name of the replicate set, it is brought down to 3, because the replicaset was a result of a deployment and the demployment is set to 3, so terminates untils it goes down to 3
 
+<details close>
+<summary>Multiple-Output</summary>
+
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
+
 hector@hector-Laptop:~/Project22$ nano deployment.yaml
 hector@hector-Laptop:~/Project22$ cat deployment.yaml
 apiVersion: apps/v1
@@ -475,21 +479,27 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 8
+
 hector@hector-Laptop:~/Project22$ kubectl apply -f deployment.yaml
 deployment.apps/nginx-deployment created
+
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           20s
+
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-5cb44ffccf   3         3         3       32s
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          44s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          44s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          44s
+
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment-5cb44ffccf --replicas=15
 replicaset.apps/nginx-deployment-5cb44ffccf scaled
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS        RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running       0          2m16s
@@ -501,23 +511,16 @@ nginx-deployment-5cb44ffccf-p8w6q   1/1     Running       0          2m16s
 nginx-deployment-5cb44ffccf-pr2lf   1/1     Terminating   0          6s
 nginx-deployment-5cb44ffccf-qjhrl   1/1     Terminating   0          6s
 nginx-deployment-5cb44ffccf-wvlzn   1/1     Terminating   0          6s
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          2m41s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          2m41s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          2m41s
-hector@hector-Laptop:~/Project22$ kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          3m
-nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          3m
-nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          3m
-hector@hector-Laptop:~/Project22$ kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          3m32s
-nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          3m32s
-nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          3m32s
+
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment-5cb44ffccf --replicas=15
 replicaset.apps/nginx-deployment-5cb44ffccf scaled
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS        RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running       0          3m49s
@@ -534,6 +537,7 @@ nginx-deployment-5cb44ffccf-z4s2s   1/1     Terminating   0          5s
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-5cb44ffccf   3         3         3       4m11s
+
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           5m52s
@@ -541,8 +545,7 @@ hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment --replicas=1
 Error from server (NotFound): replicasets.apps "nginx-deployment" not found
 hector@hector-Laptop:~/Project22$
 ```
-
-
+</details>
 
 <details close>
 <summary>Exec into one of the Pod’s container to run Linux commands</summary>
