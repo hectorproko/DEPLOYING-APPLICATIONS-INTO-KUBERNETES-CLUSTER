@@ -542,7 +542,10 @@ Error from server (NotFound): replicasets.apps "nginx-deployment" not found
 hector@hector-Laptop:~/Project22$
 ```
 
-Exec into one of the Pod’s container to run Linux commands
+
+
+<details close>
+<summary>Exec into one of the Pod’s container to run Linux commands</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl get pods
@@ -550,8 +553,16 @@ NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          7m23s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          7m23s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          7m23s
+
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-4m86n bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+```
+</details>
+
+<details close>
+<summary>nginx-deployment-5cb44ffccf-4m86n</summary>
+
+```bash
 root@nginx-deployment-5cb44ffccf-4m86n:/# ls -ltr /etc/nginx/
 total 24
 -rw-r--r-- 1 root root  664 Jul 19 14:05 uwsgi_params
@@ -561,6 +572,9 @@ total 24
 -rw-r--r-- 1 root root  648 Jul 19 15:06 nginx.conf
 lrwxrwxrwx 1 root root   22 Jul 19 15:06 modules -> /usr/lib/nginx/modules
 drwxr-xr-x 1 root root   26 Aug 10 04:53 conf.d
+```
+
+```bash
 root@nginx-deployment-5cb44ffccf-4m86n:/# cat  /etc/nginx/conf.d/default.conf
 server {
     listen       80;
@@ -609,28 +623,36 @@ server {
 
 root@nginx-deployment-5cb44ffccf-4m86n:/#
 ```
+</details>
 
 ### PERSISTING DATA FOR PODS
+
+<details close>
+<summary>Multiple-Output</summary>
 
 ``` bash
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           20m
-hector@hector-Laptop:~/Project22$ kubectl autoscale rs nginx-deployment --max=1 --min=1
-Error from server (NotFound): replicasets.apps "nginx-deployment" not found
+
+
 hector@hector-Laptop:~/Project22$ kubectl autoscale deployment nginx-deployment --max=1 --min=1
 horizontalpodautoscaler.autoscaling/nginx-deployment autoscaled
+
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           21m
+
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   1/1     1            1           21m
+
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-ws8b5   1/1     Running   0          9m9s
 hector@hector-Laptop:~/Project22$
 ```
+</details>
 
 How I figured out to scale https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 
@@ -638,27 +660,9 @@ How I figured out to scale https://kubernetes.io/docs/concepts/workloads/control
 
 
 <details close>
-<summary>kubectl get deployment</summary>
+<summary>kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash</summary>
 
 ``` bash
-hector@hector-Laptop:~/Project22$ kubectl get deployment
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   3/3     3            3           20m
-hector@hector-Laptop:~/Project22$ kubectl autoscale rs nginx-deployment --max=1 --min=1
-Error from server (NotFound): replicasets.apps "nginx-deployment" not found
-hector@hector-Laptop:~/Project22$ kubectl autoscale deployment nginx-deployment --max=1 --min=1
-horizontalpodautoscaler.autoscaling/nginx-deployment autoscaled
-hector@hector-Laptop:~/Project22$ kubectl get deployment
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   3/3     3            3           21m
-hector@hector-Laptop:~/Project22$ kubectl get deployment
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   1/1     1            1           21m
-hector@hector-Laptop:~/Project22$ kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-5cb44ffccf-ws8b5   1/1     Running   0          9m9s
-hector@hector-Laptop:~/Project22$ ^C
-hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
 root@nginx-deployment-5cb44ffccf-ws8b5:/# apt-get update
@@ -755,10 +759,6 @@ update-alternatives: warning: skip creation of /usr/share/man/pl/man1/editor.1.g
 update-alternatives: warning: skip creation of /usr/share/man/ru/man1/editor.1.gz because associated file /usr/share/man/ru/man1/vim.1.gz (of link group editor) doesn't exist
 update-alternatives: warning: skip creation of /usr/share/man/man1/editor.1.gz because associated file /usr/share/man/man1/vim.1.gz (of link group editor) doesn't exist
 Processing triggers for libc-bin (2.31-13+deb11u3) ...
-root@nginx-deployment-5cb44ffccf-ws8b5:/# vi /usr/share/nginx/html/index.html
-root@nginx-deployment-5cb44ffccf-ws8b5:/# vi /usr/share/nginx/html/index.html
-root@nginx-deployment-5cb44ffccf-ws8b5:/# cat /usr/share/nginx/html/index.html | grep welcome
-root@nginx-deployment-5cb44ffccf-ws8b5:/#
 ```
 </details>
 
