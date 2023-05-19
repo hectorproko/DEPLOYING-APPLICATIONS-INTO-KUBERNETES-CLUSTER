@@ -1,11 +1,11 @@
-clear# DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
+# DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
 PROJECT 22
 <!--
 Need to put the part of setup
 54. Kubernetes on AWS (EKS)
 -->
 
-### DEPLOYING APPLICATIONS INTO KUBERNETES CLUSTER
+
 ### UNDERSTANDING THE CONCEPT
 ### COMMON KUBERNETES OBJECTS
 
@@ -20,7 +20,7 @@ hector@hector-Laptop:~/Project22$ aws cloudformation create-stack \
 hector@hector-Laptop:~/Project22$
 ```
 
-<!--kube user is for EKS not creatin Stack
+<!--kube user is for EKS not creating Stack
 -->
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/stacks.png)
 
