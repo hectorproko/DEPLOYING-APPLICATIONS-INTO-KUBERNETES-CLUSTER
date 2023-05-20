@@ -1,14 +1,75 @@
 # DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
 PROJECT 22
+
+## UNDERSTANDING THE CONCEPT
+
+- The service object in Kubernetes routes traffic to pods.
+- The service's type can be ClusterIP, which acts as an internal load balancer.
+- The service forwards requests to pods based on their respective selector labels.
+- Pods have virtual IP addresses assigned by Kubernetes network plugins.
+- Pods can have different IP addresses from the servers they are running on.
+
+<!--
+Self Side Task
+- Build the Tooling app Dockerfile and push it to Dockerhub registry.
+- Write a Pod and a Service manifests to ensure access to the Tooling app's frontend using port-forwarding.
+-->
+
+#### Expose a Service on a Server's Public IP Address & Static Port
+- NodePort service type exposes the service on a static port on the node's IP address.
+- NodePorts are in the range of 30000-32767 by default.
+- NodePort allows direct access to the application using the node's public IP address and appended port.
+- Inbound traffic to the NodePort range needs to be allowed in the EC2's Security Group.
+
+#### Maintaining Desired Number of Pods
+- ReplicaSet (RS) object ensures a stable set of pod replicas running.
+- RS guarantees the availability of a specified number of identical pods.
+
+*Note: ReplicaSets are recommended over the older ReplicationController (RC) object.*
+
+## COMMON KUBERNETES OBJECTS  
+
+1. **Pod**: A Pod is the smallest deployable unit in Kubernetes. It represents a single instance of a running process in a cluster. Pods can contain one or more containers that are tightly coupled and share resources.
+
+2. **Namespace**: A Namespace provides a way to group and isolate resources within a cluster. It allows multiple teams or projects to share the same cluster while keeping their resources separate.
+
+3. **ReplicaSet**: A ReplicaSet ensures that a specified number of Pod replicas are running at all times. It is used to scale and manage the lifecycle of Pods. ReplicaSets are typically managed by higher-level controllers like Deployments.
+
+4. **Deployment**: A Deployment provides declarative updates for Pods and ReplicaSets. It manages the creation and scaling of ReplicaSets, making it easier to manage application deployments and updates.
+
+5. **StatefulSet**: A StatefulSet is similar to a ReplicaSet but is used for managing stateful applications. It provides guarantees about the ordering and uniqueness of Pods, making it suitable for applications that require stable network identities and persistent storage.
+
+6. **DaemonSet**: A DaemonSet ensures that a copy of a Pod is running on each node in the cluster. It is useful for running system daemons or agents that need to be present on every node.
+
+7. **Service**: A Service is an abstraction that defines a logical set of Pods and a policy for accessing them. It provides a stable network endpoint to access the Pods, allowing for load balancing and service discovery.
+
+8. **ConfigMap**: A ConfigMap is used to store configuration data as key-value pairs. It allows you to separate configuration from the container images and make it easier to manage and update configurations.
+
+9. **Volume**: A Volume is used to provide persistent storage for containers in a Pod. It allows data to outlive the lifecycle of individual containers and can be shared between containers within the same Pod.
+
+10. **Job/CronJob**: A Job represents a task or a batch job that runs to completion. It ensures that a specified number of Pods successfully complete their tasks before terminating. CronJob is a type of Job that runs on a schedule.
+
+The common YAML fields for every Kubernetes object include:
+
+- `kind`: Specifies the type of Kubernetes object being created, such as Pod, Deployment, or Service.
+- `version`: Indicates the version of the Kubernetes API used to create the resource.
+- `metadata`: Provides information about the resource, such as its name, labels, and annotations.
+- `spec`: Contains the core information about the resource, defining its desired state. This includes details like container images, number of replicas, environment variables, and volumes.
+- `status`: Represents the current status of the object and is updated by Kubernetes after creation. This field is not typically included in the YAML manifest provided by the user.
+
+These fields help define the characteristics and behavior of the Kubernetes objects and guide Kubernetes in managing and maintaining the desired state of the cluster.
+
+
+
+## Kubernetes on AWS (EKS)
+
+
 <!--
 Need to put the part of setup
 54. Kubernetes on AWS (EKS)
 -->
 
-
-### UNDERSTANDING THE CONCEPT
-### COMMON KUBERNETES OBJECTS
-
+Create Stack
 ``` css
 hector@hector-Laptop:~/Project22$ aws cloudformation create-stack \
 > --region us-east-1 \
@@ -144,7 +205,7 @@ nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26
 
 
 
-### ACCESSING THE APP FROM THE BROWSER
+## ACCESSING THE APP FROM THE BROWSER
 
 Run **kubectl** to connect inside the container
 
@@ -275,7 +336,7 @@ Then I do lynx `127.0.0.1:8089` and nginx page apears
 
 
 
-### CREATE A REPLICA SET
+## CREATE A REPLICA SET
 
 Let us create a **rs.yaml** manifest for a ReplicaSet object:
 
@@ -399,7 +460,7 @@ nginx-rs   3         3         3       15s   nginx-container   nginx:latest   en
 
 
 
-### USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
+## USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
 
 <details close>
 <summary>Multiple-Output</summary>
@@ -485,7 +546,7 @@ hector@hector-Laptop:~/Project22$
 
 
 
-### USING DEPLOYMENT CONTROLLERS
+## USING DEPLOYMENT CONTROLLERS
 
 If I scale to 15 with the name of the replicate set, it is brought down to 3, because the replicaset was a result of a deployment and the demployment is set to 3, so terminates untils it goes down to 3
 
@@ -668,7 +729,7 @@ root@nginx-deployment-5cb44ffccf-4m86n:/#
 ```
 </details>
 
-### PERSISTING DATA FOR PODS
+## PERSISTING DATA FOR PODS
 
 <details close>
 <summary>Multiple-Output</summary>
