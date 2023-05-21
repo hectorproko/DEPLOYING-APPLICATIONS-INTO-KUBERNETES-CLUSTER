@@ -311,8 +311,11 @@ To verify the status of the running Pods in the cluster `kubectl get pods`
 NAME        READY   STATUS    RESTARTS   AGE
 nginx-pod   1/1     Running   0          19m
 ```
+*Assuming that the requirement is to access the Nginx Pod internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another Pod is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
+*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, you do not need to use an IP address. Rather, you can simply refer to the service name directly.*
 
 
+Now that we have a running Pod, the next step is to provide access to the Pod from the outside world, such as a web browser.
 
 
 
