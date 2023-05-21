@@ -281,10 +281,10 @@ nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26
 
 ## ACCESSING THE APP FROM THE BROWSER
 
-We use **kubectl** to create a new Pod named "curl" and allocate an interactive shell within the container to run `curl` inside the container to perform a `GET` request to verify that the nginx service is up and running properly
+We use **kubectl** to create a new Pod named "curl" and allocate an interactive shell within the container to run the `curl` command inside the container to perform a `GET` request to verify that the nginx service is up and running properly
 
 <details close>
-<summary>kubectl run curl --image=dareyregistry/curl -i --tty</summary>
+<summary>Output</summary>
 
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl run curl --image=dareyregistry/curl -i --tty
