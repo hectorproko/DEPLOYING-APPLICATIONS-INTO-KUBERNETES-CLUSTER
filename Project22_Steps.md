@@ -94,7 +94,7 @@ Per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting
 
 We create file `cluster-role-trust-policy.json`
 
-```json
+```css
 {
   "Version": "2012-10-17",
   "Statement": [
