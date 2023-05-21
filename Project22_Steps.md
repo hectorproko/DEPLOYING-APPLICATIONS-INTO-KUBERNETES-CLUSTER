@@ -664,13 +664,17 @@ NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                       
 nginx-service   LoadBalancer   10.100.15.31   a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com   80:30466/TCP   95m
 ```
 
-
-
+If we navigate to the AWS console, we can confirm that the Load Balancer was created along with associated tags.  
+<!--
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/createLB.png)
+-->
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/description.png)
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/tags.png)  
+
+
+In the following command output, we are retrieving the YAML representation of the nginx-service Service object. The YAML provides detailed information about the service configuration, including annotations, creation timestamp, finalizers, metadata, spec, and status.
 
 <details close>
 <summary>kubectl get service nginx-service -o yaml</summary>
@@ -717,6 +721,7 @@ hector@hector-Laptop:~/Project22$
 ```
 </details>
 
+Using the DNS name of the load balancer `a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com`, I tested the service by accessing it in a web browser.
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/testingNginxLoadBalancer.gif)  
 
 
