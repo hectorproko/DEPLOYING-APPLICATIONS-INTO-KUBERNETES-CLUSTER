@@ -90,9 +90,11 @@ hector@hector-Laptop:~/Project22$
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/stacks.png)
 
 
-Per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
+As per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
 
-We create file `cluster-role-trust-policy.json`
+Create a cluster IAM role and attach the required Amazon EKS IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on your behalf to manage the resources that you use with the service.
+
+a. We create file `cluster-role-trust-policy.json`.
 
 ```css
 {
@@ -109,11 +111,47 @@ We create file `cluster-role-trust-policy.json`
 }
 ```
 
+b. Created the role **myAmazonEKSClusterRole**.
 
 `--assume-role-policy-document` is used during role creation to define the trust policy document, which determines who can assume the role.  
 
+```css
+hector@hector-Laptop:~$ aws iam create-role \
+>   --role-name myAmazonEKSClusterRole \
+>   --assume-role-policy-document file://"cluster-role-trust-policy.json"
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "myAmazonEKSClusterRole",
+        "RoleId": "AROAS4WE4FUSEZXBGIH4R",
+        "Arn": "arn:aws:iam::199055125796:role/myAmazonEKSClusterRole",
+        "CreateDate": "2022-07-26T13:26:57Z",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "eks.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+```
+
+c. Attach the required Amazon EKS managed IAM policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
+
 `attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
 
+```css
+hector@hector-Laptop:~$ aws iam attach-role-policy \
+>   --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy \
+>   --role-name myAmazonEKSClusterRole
+hector@hector-Laptop:~$
+```
 
 
 
@@ -124,20 +162,14 @@ We create file `cluster-role-trust-policy.json`
 
 
 
-
-
-
-
-
-
-
-Creating Cluster From Console
+<details close>
+<summary>Creating Cluster From Console (web-based graphical user interface)</summary>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusters.png)
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/configure.png)
 
-Keep in mind we created this service roel already therefore It appears there
+Notice how the role we previously created appears as an option  
 
 Click **Next** to **Specify networking**
 
@@ -157,6 +189,21 @@ Click **Create**
 
 We need to specify the IDs of the VPC we want when creating cluster from **AWS CLI**
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/subnets.png)
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
