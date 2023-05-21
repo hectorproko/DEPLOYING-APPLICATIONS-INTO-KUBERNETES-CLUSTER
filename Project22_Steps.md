@@ -311,17 +311,6 @@ To verify the status of the running Pods in the cluster `kubectl get pods`
 NAME        READY   STATUS    RESTARTS   AGE
 nginx-pod   1/1     Running   0          19m
 ```
-*Assuming that the requirement is to access the Nginx Pod internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another Pod is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
-*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, you do not need to use an IP address. Rather, you can simply refer to the service name directly.*
-
-
-Now that we have a running Pod, the next step is to provide access to the Pod from the outside world, such as a web browser.
-
-
-
-
-
-
 
 
 <!--
@@ -329,7 +318,7 @@ We use **kubectl** to create a new Pod named "curl" and allocate an interactive 
 
 <details close>
 <summary>Output</summary>
-
+##An example of using the IP directly to access the pod
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl run curl --image=dareyregistry/curl -i --tty
 If you don't see a command prompt, try pressing enter.
@@ -380,17 +369,14 @@ Commercial support is available at
 
 
 
+*Assuming that the requirement is to access the Nginx Pod internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another Pod is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
+*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, you do not need to use an IP address. Rather, you can simply refer to the service name directly.*
 
 
+Since we want to provide access to the **Nginx Pod** from the outside world, such as a web browser, we create a Service.
 
+1. Create a Service `yaml` manifest file `nginx-service.yaml`
 
-
-
-Let us create a service to access the **Nginx Pod**
-1. Create a Service `yaml` manifest file:
-
-<details close>
-<summary>cat nginx-service.yaml</summary>
 
 ``` css
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
@@ -405,19 +391,27 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+```
 
+Apply the manifest using the `kubectl apply -f nginx-service.yaml` command. This creates the Service in the Kubernetes cluster.
+```
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service created
+```
 
+To verify that the Service is created, run `kubectl get service` command. This will list the Services in your cluster, including the newly created nginx-service.
+```
 hector@hector-Laptop:~/Project22$ kubectl get service
 NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 kubernetes      ClusterIP   10.100.0.1     <none>        443/TCP   56m
 nginx-service   ClusterIP   10.100.15.31   <none>        80/TCP    64s
- 
+```
+
+Finally, we attempt to use kubectl port-forward command to forward traffic from local port 8089 to port 80 of the nginx-service. However, the command encountered a timeout error, indicating that the port forwarding did not succeed
+```
 hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
 ```
-</details>
 
 
 
