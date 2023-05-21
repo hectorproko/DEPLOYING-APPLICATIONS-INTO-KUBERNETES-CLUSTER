@@ -281,6 +281,47 @@ nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26
 
 ## ACCESSING THE APP FROM THE BROWSER
 
+Let's create a Pod named **nginx-pod** by defining a YAML manifest on master node.  
+
+```css
+sudo cat <<EOF | sudo tee ./nginx-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - image: nginx:latest
+    name: nginx-pod
+    ports:
+    - containerPort: 80
+      protocol: TCP
+EOF
+```
+We should have a YAML file named nginx-pod.yaml with the necessary specifications for the Pod. It defines a single container running the latest version of the nginx image, named **nginx-pod**. Port 80 is exposed using the TCP protocol.
+
+To create the Pod we apply the manifest using `kubectl`  
+```css
+kubectl apply -f nginx-pod.yaml
+pod/nginx-pod created <<< output
+```
+
+To verify the status of the running Pods in the cluster `kubectl get pods`
+```css
+NAME        READY   STATUS    RESTARTS   AGE
+nginx-pod   1/1     Running   0          19m
+```
+
+
+
+
+
+
+
+
+
+
+<!--
 We use **kubectl** to create a new Pod named "curl" and allocate an interactive shell within the container to run the `curl` command inside the container to perform a `GET` request to verify that the nginx service is up and running properly
 
 <details close>
@@ -332,6 +373,14 @@ Commercial support is available at
 ```
 *(In the provided output, the response indicates an HTTP status code of 200 OK)*
 </details>
+-->
+
+
+
+
+
+
+
 
 
 Let us create a service to access the **Nginx Pod**
