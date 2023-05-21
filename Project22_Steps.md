@@ -742,10 +742,8 @@ A Deployment is another layer above ReplicaSets and Pods, newer and more advance
 If I scale to 15 with the name of the replicate set, it is brought down to 3, because the replicaset was a result of a deployment and the demployment is set to 3, so terminates untils it goes down to 3
 -->
 
-In this series of commands, we demonstrate the behavior of a Kubernetes Deployment and its associated ReplicaSet.  
-
 <details close>
-<summary>Multiple-Output</summary>
+<summary>In this series of commands, we demonstrate the behavior of a Kubernetes Deployment and its associated ReplicaSet.</summary>
 
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
