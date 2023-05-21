@@ -406,49 +406,53 @@ NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 kubernetes      ClusterIP   10.100.0.1     <none>        443/TCP   56m
 nginx-service   ClusterIP   10.100.15.31   <none>        80/TCP    64s
 ```
+*(The output will show the CLUSTER-IP, PORT(S), and other information about the Service. Note that the EXTERNAL-IP is \<none> at this stage, indicating that the Service is not yet externally accessible)*  
 
-Finally, we attempt to use kubectl port-forward command to forward traffic from local port 8089 to port 80 of the nginx-service. However, the command encountered a timeout error, indicating that the port forwarding did not succeed
+Attempting to port forward using `kubectl port-forward` command to forward traffic from local port 8089 to port 80 of the nginx-service results in a timeout error. This error occurs because the Pod associated with the Service does not have the necessary labels for the Service to select it.
 ```
 hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
 ```
 
+To establish the required connection, you need to modify the Pod manifest to include **labels** that align with the **selectors** specified in the Service manifest.
 
+1. Deleted the existing Pod to start fresh `kubectl delete pod nginx-pod`
+2. Updated the YAML manifest file of the pod `nginx-pod.yaml` with the necessary changes (added labels)
+    ``` css
+    hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx-pod
+        ports:
+        - containerPort: 80
+          protocol: TCP
+    ```
 
-To make this work, you must reconfigure the Pod manifest and introduce **labels** to match the **selectors** key in the field section of the service manifest.
+3. Applied the updated manifest file creating a new pod 
+    ```css
+    hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-pod.yaml
+    pod/nginx-pod created
+    ```
 
-Deleted the pod, updated the file .yaml aka manifest, applied it gain
-
-<details close>
-<summary>cat nginx-pod.yaml</summary>
-
-``` css
-hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-pod
-  labels:
-    app: nginx-pod
-spec:
-  containers:
-  - image: nginx:latest
-    name: nginx-pod
-    ports:
-    - containerPort: 80
-      protocol: TCP
-hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-pod.yaml
-pod/nginx-pod created
+This output signifies that now the port forwarding is functioning correctly. Requests made to `127.0.0.1:8089` or `[::1]:8089` on your local machine will be redirected to port 80 of the Nginx service.  
+```css
 hector@hector-Laptop:~/Project22$ kubectl  port-forward svc/nginx-service 8089:80
 Forwarding from 127.0.0.1:8089 -> 80
 Forwarding from [::1]:8089 -> 80
 Handling connection for 8089
 Handling connection for 8089
 ```
-</details>
 
 
-Then I do lynx `127.0.0.1:8089` and nginx page apears  
+
+When we execute the command `lynx 127.0.0.1:8089`, the Nginx web page will appear in the lynx text-based web browser. This confirms that we can now access the Nginx service running on the Pod through the forwarded port.  
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/testingNginxPod.gif)
 
