@@ -94,64 +94,63 @@ As per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/gett
 
 Create a cluster IAM role and attach the required Amazon EKS IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on your behalf to manage the resources that you use with the service.
 
-a. We create file `cluster-role-trust-policy.json`.
-
-```css
-{
-  "Version": "2012-10-17",
-  "Statement": [
+1. We create file `cluster-role-trust-policy.json`.  
+    ```css
     {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
     }
-  ]
-}
-```
+    ```
 
-b. Created the role **myAmazonEKSClusterRole**.
 
-`--assume-role-policy-document` is used during role creation to define the trust policy document, which determines who can assume the role.  
+2. Created the role **myAmazonEKSClusterRole**.  
+  `--assume-role-policy-document` is used during role creation to define the trust policy document, which determines who can assume the role.  
 
-```css
-hector@hector-Laptop:~$ aws iam create-role \
->   --role-name myAmazonEKSClusterRole \
->   --assume-role-policy-document file://"cluster-role-trust-policy.json"
-{
-    "Role": {
-        "Path": "/",
-        "RoleName": "myAmazonEKSClusterRole",
-        "RoleId": "AROAS4WE4FUSEZXBGIH4R",
-        "Arn": "arn:aws:iam::199055125796:role/myAmazonEKSClusterRole",
-        "CreateDate": "2022-07-26T13:26:57Z",
-        "AssumeRolePolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": "eks.amazonaws.com"
-                    },
-                    "Action": "sts:AssumeRole"
-                }
-            ]
+    ```css
+    hector@hector-Laptop:~$ aws iam create-role \
+    >   --role-name myAmazonEKSClusterRole \
+    >   --assume-role-policy-document file://"cluster-role-trust-policy.json"
+    {
+        "Role": {
+            "Path": "/",
+            "RoleName": "myAmazonEKSClusterRole",
+            "RoleId": "AROAS4WE4FUSEZXBGIH4R",
+            "Arn": "arn:aws:iam::199055125796:role/myAmazonEKSClusterRole",
+            "CreateDate": "2022-07-26T13:26:57Z",
+            "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "eks.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }
+                ]
+            }
         }
     }
-}
-```
+    ```
 
-c. Attach the required Amazon EKS managed IAM policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
+3. Attach the required Amazon EKS managed IAM policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
 
-`attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
+    `attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
 
-```css
-hector@hector-Laptop:~$ aws iam attach-role-policy \
->   --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy \
->   --role-name myAmazonEKSClusterRole
-hector@hector-Laptop:~$
-```
+    ```css
+    hector@hector-Laptop:~$ aws iam attach-role-policy \
+    >   --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy \
+    >   --role-name myAmazonEKSClusterRole
+    hector@hector-Laptop:~$
+    ```
 
 
 **Creating Cluster** 
@@ -211,14 +210,17 @@ hector@hector-Laptop:~/Project22$
 ```
 </details><br>
 
-Configuring Computer to communicate with cluster 
+**Configuring Computer to Communicate with Kubernetes Cluster**  
 
-Deleting current `~/.kube/config` since we already backed it 
+- Deleted the existing kubeconfig file located at `~/.kube/config` to make way for a new configuration.  
 
-``` css
-hector@hector-Laptop:~/Project22$ aws eks update-kubeconfig --profile kube --region us-east-1 --name Project22
-Added new context arn:aws:eks:us-east-1:199055125796:cluster/Project22 to /home/hector/.kube/config
-```
+- This AWS CLI command is used to update the kubeconfig file with the necessary configuration for accessing the EKS cluster named "Project22" in the AWS region "us-east-1". The --profile option specifies the AWS profile to use for authentication and authorization.  
+  ``` css
+  hector@hector-Laptop:~/Project22$ aws eks update-kubeconfig --profile kube --region us-east-1 --name Project22
+  Added new context arn:aws:eks:us-east-1:199055125796:cluster/Project22 to /home/hector/.kube/config
+  ```
+
+
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl cluster-info
 Kubernetes control plane is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com
