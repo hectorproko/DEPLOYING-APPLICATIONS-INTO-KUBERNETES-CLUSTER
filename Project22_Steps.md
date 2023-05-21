@@ -630,13 +630,11 @@ nginx-rs   3         3         3       15s   nginx-container   nginx:latest   en
 ```
 
 
-
-
 ## USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
 
-<details close>
-<summary>Multiple-Output</summary>
+We previously used the ClusterIP service type to access the Nginx service internally. Now, we'll switch to the LoadBalancer service type, which creates an actual load balancer in AWS. This allows us to expose the Nginx service to the external world and benefit from load balancing capabilities provided by the external load balancer. <br>
 
+New service manifest using the LoadBalancer type  
 ``` css
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
 apiVersion: v1
@@ -651,15 +649,21 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+```
+
+Applying the manifest to create the service  
+```
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service configured
+```
 
+Retrieving information about the service shows it is of type LoadBalancer  
+```
 hector@hector-Laptop:~/Project22$ kubectl get service nginx-service
 NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                                                              PORT(S)        AGE
 nginx-service   LoadBalancer   10.100.15.31   a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com   80:30466/TCP   95m
-hector@hector-Laptop:~/Project22$
 ```
-</details>
+
 
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/createLB.png)
