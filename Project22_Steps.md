@@ -63,6 +63,9 @@ These fields help define the characteristics and behavior of the Kubernetes obje
 
 ## Kubernetes on AWS (EKS)
 
+So following [Getting started with Amazon EKS – AWS Management Console and AWS CLI - Amazon EKS](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
+
+Once again we will utilize the existing **AWS CLI** setup *(from [Project 15](https://github.com/hectorproko/AWS-CLOUD-SOLUTION-FOR-2-COMPANY-WEBSITES-USING-A-REVERSE-PROXY-TECHNOLOGY/blob/main/Project15_Steps.md))* using sub-account **DevOps**
 
 <!--
 Need to put the part of setup
@@ -83,7 +86,50 @@ hector@hector-Laptop:~/Project22$
 
 <!--kube user is for EKS not creating Stack
 -->
+
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/stacks.png)
+
+
+Per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
+
+We create file `cluster-role-trust-policy.json`
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+
+
+`--assume-role-policy-document` is used during role creation to define the trust policy document, which determines who can assume the role.  
+
+`attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Creating Cluster From Console
 
