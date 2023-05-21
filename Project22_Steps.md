@@ -734,7 +734,15 @@ Using the DNS name of the load balancer `a0e08a526ccb04426acb64895c03dc0d-651336
 
 ## USING DEPLOYMENT CONTROLLERS
 
+Officially, it is highly recommended to use Deployments to manage replica sets rather than using replica sets directly.  
+
+A Deployment is another layer above ReplicaSets and Pods, newer and more advanced level concept than ReplicaSets. It manages the deployment of ReplicaSets and allows for easy updating of a ReplicaSet as well as the ability to roll back to a previous version of deployment. It is declarative and can be used for rolling updates of micro-services, ensuring there is no downtime.  
+
+<!--
 If I scale to 15 with the name of the replicate set, it is brought down to 3, because the replicaset was a result of a deployment and the demployment is set to 3, so terminates untils it goes down to 3
+-->
+
+In this series of commands, we demonstrate the behavior of a Kubernetes Deployment and its associated ReplicaSet.  
 
 <details close>
 <summary>Multiple-Output</summary>
@@ -742,8 +750,9 @@ If I scale to 15 with the name of the replicate set, it is brought down to 3, be
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
-
-hector@hector-Laptop:~/Project22$ nano deployment.yaml
+```
+Initially, we created a Deployment, specifying 3 replicas of a pod running the nginx container. This Deployment automatically created a ReplicaSet to manage these pods, maintaining the desired state of 3 active nginx pods
+```
 hector@hector-Laptop:~/Project22$ cat deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -766,27 +775,35 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 8
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl apply -f deployment.yaml
 deployment.apps/nginx-deployment created
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           20s
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-5cb44ffccf   3         3         3       32s
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          44s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          44s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          44s
+```
 
+Later, we attempted to manually scale the ReplicaSet to 15 replicas using the 'kubectl scale' command. However, as the ReplicaSet is managed by a Deployment, the Deployment immediately noticed this change and reverted it back to the desired state of 3 replicas. This was evident from the 'Terminating' status of the additional pods.
+```
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment-5cb44ffccf --replicas=15
 replicaset.apps/nginx-deployment-5cb44ffccf scaled
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS        RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running       0          2m16s
@@ -798,39 +815,18 @@ nginx-deployment-5cb44ffccf-p8w6q   1/1     Running       0          2m16s
 nginx-deployment-5cb44ffccf-pr2lf   1/1     Terminating   0          6s
 nginx-deployment-5cb44ffccf-qjhrl   1/1     Terminating   0          6s
 nginx-deployment-5cb44ffccf-wvlzn   1/1     Terminating   0          6s
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          2m41s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          2m41s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          2m41s
-
-hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment-5cb44ffccf --replicas=15
-replicaset.apps/nginx-deployment-5cb44ffccf scaled
-
-hector@hector-Laptop:~/Project22$ kubectl get pods
-NAME                                READY   STATUS        RESTARTS   AGE
-nginx-deployment-5cb44ffccf-4m86n   1/1     Running       0          3m49s
-nginx-deployment-5cb44ffccf-7rst5   1/1     Terminating   0          6s
-nginx-deployment-5cb44ffccf-8rrkf   1/1     Running       0          3m49s
-nginx-deployment-5cb44ffccf-cqjvx   0/1     Terminating   0          5s
-nginx-deployment-5cb44ffccf-jzs7p   1/1     Terminating   0          6s
-nginx-deployment-5cb44ffccf-lxt8f   0/1     Terminating   0          5s
-nginx-deployment-5cb44ffccf-p8w6q   1/1     Running       0          3m49s
-nginx-deployment-5cb44ffccf-t4g4j   1/1     Terminating   0          5s
-nginx-deployment-5cb44ffccf-vllkl   1/1     Terminating   0          6s
-nginx-deployment-5cb44ffccf-xk4kh   1/1     Terminating   0          5s
-nginx-deployment-5cb44ffccf-z4s2s   1/1     Terminating   0          5s
-hector@hector-Laptop:~/Project22$ kubectl get rs
-NAME                          DESIRED   CURRENT   READY   AGE
-nginx-deployment-5cb44ffccf   3         3         3       4m11s
-
+```
+```
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           5m52s
-hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment --replicas=15
-Error from server (NotFound): replicasets.apps "nginx-deployment" not found
-hector@hector-Laptop:~/Project22$
 ```
 </details>
 
@@ -847,7 +843,11 @@ nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          7m23s
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-4m86n bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
 ```
+This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a ReplicaSet is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the ReplicaSet are overridden by the Deployment to maintain the state defined in the Deployment specification.
 </details>
+
+
+
 
 <details close>
 <summary>nginx-deployment-5cb44ffccf-4m86n</summary>
