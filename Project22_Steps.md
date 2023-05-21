@@ -220,32 +220,35 @@ hector@hector-Laptop:~/Project22$
   Added new context arn:aws:eks:us-east-1:199055125796:cluster/Project22 to /home/hector/.kube/config
   ```
 
+- This kubectl command is used to retrieve information about the Kubernetes cluster. It provides details such as the URL of the Kubernetes control plane and the URL of CoreDNS, which is responsible for DNS resolution within the cluster.
+  ``` css
+  hector@hector-Laptop:~/Project22$ kubectl cluster-info
+  Kubernetes control plane is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com
+  CoreDNS is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-``` css
-hector@hector-Laptop:~/Project22$ kubectl cluster-info
-Kubernetes control plane is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com
-CoreDNS is running at https://522B9ADEF131F42CC77EB11C3FB33A42.gr7.us-east-1.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+  hector@hector-Laptop:~/Project22$
+  ```
 
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-hector@hector-Laptop:~/Project22$
-```
-
+<br>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
-The creation of the POD said pending, we still had no workers in the cluster, that might be it, **confirmed**.
-Created Node groups and it worked
-![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/nodegroups.png)
+- I attempted to create a Pod in the Kubernetes cluster, the Pod remained in the "Pending" state.   
+*(In Kubernetes, a "Pending" status means that the Pod has been scheduled to run on a node but is waiting for the necessary resources, such as CPU and memory, to become available)*  
 
-Trying with just node, cant, only Node Groups
+- The cause was that the cluster had no active worker nodes available to schedule  and run Pods.  
+*(Worker nodes are responsible for executing and hosting Pods in a Kubernetes cluster)*
+
+- To address the problem, I had to create a Node group.  
+  (Node groups are a way to provision and manage worker nodes in an Amazon EKS cluster. By creating a Node group, we added worker nodes to the cluster, providing the necessary resources for Pods to be scheduled and run)
+
+  ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/configureNodeGroup.png)
+  *(Everything else defaults)*
+
+  ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/nodegroups.png)
 
 
-Redoing the Node Group
-
-![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/configureNodeGroup.png)
-
-
-Everything else defaults
 
 <details close>
 <summary>Once you delete the Node group, whatever pod was running disappears</summary>
