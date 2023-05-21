@@ -634,7 +634,7 @@ nginx-rs   3         3         3       15s   nginx-container   nginx:latest   en
 
 We previously used the ClusterIP service type to access the Nginx service internally. Now, we'll switch to the LoadBalancer service type, which creates an actual load balancer in AWS. This allows us to expose the Nginx service to the external world and benefit from load balancing capabilities provided by the external load balancer. <br>
 
-New service manifest using the LoadBalancer type  
+New service manifest using the LoadBalancer type:  
 ``` css
 hector@hector-Laptop:~/Project22$ cat nginx-service.yaml
 apiVersion: v1
@@ -651,13 +651,13 @@ spec:
       targetPort: 80
 ```
 
-Applying the manifest to create the service  
+Applying the manifest to create the service:  
 ```
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service configured
 ```
 
-Retrieving information about the service shows it is of type LoadBalancer  
+Retrieving information about the service shows it is of type LoadBalancer:  
 ```
 hector@hector-Laptop:~/Project22$ kubectl get service nginx-service
 NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                                                              PORT(S)        AGE
