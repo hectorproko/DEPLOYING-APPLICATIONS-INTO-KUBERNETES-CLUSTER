@@ -229,10 +229,9 @@ hector@hector-Laptop:~/Project22$
   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
   hector@hector-Laptop:~/Project22$
   ```
+  ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
 <br>
-
-![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
 - I attempted to create a Pod in the Kubernetes cluster, the Pod remained in the "Pending" state.   
 *(In Kubernetes, a "Pending" status means that the Pod has been scheduled to run on a node but is waiting for the necessary resources, such as CPU and memory, to become available)*  
