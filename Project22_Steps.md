@@ -463,31 +463,72 @@ When we execute the command `lynx 127.0.0.1:8089`, the Nginx web page will appea
 
 ## CREATE A REPLICA SET
 
-Let us create a **rs.yaml** manifest for a ReplicaSet object:
+Let us create a **rs.yaml** manifest for a ReplicaSet object. ReplicaSet (RS) object ensures a stable set of pod replicas running
 
-<details close>
-<summary>Multiple-Output</summary>
+```css
+# Part 1
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-pod
+# Part 2
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx-pod
+        ports:
+        - containerPort: 80
+          protocol: TCP
 
+```
+
+The ReplicaSet named **nginx-rs** was created successfully.  
+```css
+hector@hector-Laptop:~/Project22$ kubectl apply -f rs.yaml
+replicaset.apps/nginx-rs created
+```
+Listed the pods using `kubectl get pods` command. It shows the status of the existing pods, including nginx-pod and the pods managed by the ReplicaSet (**nginx-rs-6qshv** and **nginx-rs-ch9tp**).  
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          49m
 nginx-rs-6qshv   1/1     Running   0          17m
 nginx-rs-ch9tp   1/1     Running   0          17m
+```
 
+Deleting one of the ReplicaSet pods **nginx-rs-ch9tp** 
+```
 hector@hector-Laptop:~/Project22$ kubectl delete pod nginx-rs-ch9tp
 pod "nginx-rs-ch9tp" deleted
+```
 
+Listing the pods it shows that a new ReplicaSet pod **nginx-rs-tqvs8** was created to maintain the desired number of replicas.  
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          50m
 nginx-rs-6qshv   1/1     Running   0          18m
 nginx-rs-tqvs8   1/1     Running   0          21s
+```
 
+Listing the ReplicaSets shows **nginx-rs** with the desired, current, and ready replicas set to 3. 
+```
 hector@hector-Laptop:~/Project22$ kubectl get rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES         SELECTOR
 nginx-rs   3         3         3       19m   nginx-pod    nginx:latest   app=nginx-pod
+```
 
+```
 hector@hector-Laptop:~/Project22$ kubectl describe rs nginx-rs
 Name:         nginx-rs
 Namespace:    default
@@ -513,19 +554,16 @@ Events:
   Normal  SuccessfulCreate  19m   replicaset-controller  Created pod: nginx-rs-ch9tp
   Normal  SuccessfulCreate  106s  replicaset-controller  Created pod: nginx-rs-tqvs8
 ```
-</details>
 
-
-**Imperative:**
-We can easily scale our ReplicaSet up by specifying the desired number of replicas in an imperative command, like this:
-
-<details close>
-<summary>Multiple-Output</summary>
+**Scaling the ReplicaSet:** We can use the **imperative** command `kubectl scale` to scale up the ReplicaSet named **nginx-rs** to have 5 replicas.  
 
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-rs --replicas=5
 replicaset.apps/nginx-rs scaled
+```
 
+There are now a total of 5 pods running, including the original nginx-pod and the newly created pods by the ReplicaSet.
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
 nginx-pod        1/1     Running   0          54m
@@ -535,18 +573,21 @@ nginx-rs-hkpfm   1/1     Running   0          26s
 nginx-rs-tqvs8   1/1     Running   0          5m6s
 hector@hector-Laptop:~/Project22$
 ```
-
-Deleted previous replicaset
+The ReplicaSet nginx-rs has been scaled to have 5 replicas.
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME       DESIRED   CURRENT   READY   AGE
 nginx-rs   5         5         5       29m
+```
 
+Deleting previous ReplicaSet
+```
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
 hector@hector-Laptop:~/Project22$
 ```
 
+The new ReplicaSet manifest `rs2.yaml` introduces more advanced label selection and customization options.
 ``` css
 hector@hector-Laptop:~/Project22$ cat rs2.yaml
 apiVersion: apps/v1
@@ -573,15 +614,21 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+```
 
+The new ReplicaSet **nginx-rs** with the advanced label selection and customization options has been created.  
+```
 hector@hector-Laptop:~/Project22$ kubectl apply -f rs2.yaml
 replicaset.apps/nginx-rs created
+```
 
+The ReplicaSet `nginx-rs` now has a desired replica count of 3, and all replicas are running and ready. The selector specifies that the replicas should have labels matching `env=prod` and `tier=frontend`.  
+```
 hector@hector-Laptop:~/Project22$ kubectl get rs nginx-rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS        IMAGES         SELECTOR
 nginx-rs   3         3         3       15s   nginx-container   nginx:latest   env=prod,tier in (frontend)
 ```
-</details>
+
 
 
 
