@@ -231,8 +231,6 @@ hector@hector-Laptop:~/Project22$
   ```
   ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
-<br>
-
 - I attempted to create a Pod in the Kubernetes cluster, the Pod remained in the "Pending" state.   
 *(In Kubernetes, a "Pending" status means that the Pod has been scheduled to run on a node but is waiting for the necessary resources, such as CPU and memory, to become available)*  
 
@@ -283,7 +281,7 @@ nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26
 
 ## ACCESSING THE APP FROM THE BROWSER
 
-Run **kubectl** to connect inside the container
+We use **kubectl** to create a new Pod named "curl" and allocate an interactive shell within the container to run `curl` inside the container to perform a `GET` request to verify that the nginx service is up and running properly
 
 <details close>
 <summary>kubectl run curl --image=dareyregistry/curl -i --tty</summary>
@@ -332,6 +330,7 @@ Commercial support is available at
 </html>
 / #
 ```
+*(In the provided output, the response indicates an HTTP status code of 200 OK)*
 </details>
 
 
