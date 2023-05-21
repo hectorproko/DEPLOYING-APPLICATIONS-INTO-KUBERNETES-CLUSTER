@@ -826,6 +826,8 @@ hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           5m52s
 ```
+
+This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a ReplicaSet is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the ReplicaSet are overridden by the Deployment to maintain the state defined in the Deployment specification.
 </details>
 
 <details close>
@@ -841,7 +843,6 @@ nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          7m23s
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-4m86n bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
 ```
-This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a ReplicaSet is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the ReplicaSet are overridden by the Deployment to maintain the state defined in the Deployment specification.
 </details>
 
 
