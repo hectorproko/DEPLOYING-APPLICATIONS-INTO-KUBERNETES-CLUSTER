@@ -157,7 +157,7 @@ hector@hector-Laptop:~$
 **Creating Cluster** 
 
 <details close>
-<summary>Using the Console (web-based graphical user interface)</summary>
+<summary>Using the Console (web-based graphical user interface):</summary>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusters.png)
 
@@ -186,23 +186,8 @@ We need to specify the IDs of the VPC we want when creating cluster from **AWS C
 </details>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <details close>
-<summary>Create Cluster:</summary>
+<summary>Using AWS CLI:</summary>
 
 ```css
 hector@hector-Laptop:~/Project22$ aws eks create-cluster --profile kube --region us-east-1 --name Project22 --kubernetes-version 1.22 \
