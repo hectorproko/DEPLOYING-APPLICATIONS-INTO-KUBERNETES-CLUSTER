@@ -154,16 +154,10 @@ hector@hector-Laptop:~$
 ```
 
 
-
-
-
-
-
-
-
+**Creating Cluster** 
 
 <details close>
-<summary>Creating Cluster From Console (web-based graphical user interface)</summary>
+<summary>Using the Console (web-based graphical user interface)</summary>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusters.png)
 
