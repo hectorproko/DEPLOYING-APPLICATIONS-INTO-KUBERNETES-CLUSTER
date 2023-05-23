@@ -830,28 +830,24 @@ nginx-deployment   3/3     3            3           5m52s
 This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a ReplicaSet is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the ReplicaSet are overridden by the Deployment to maintain the state defined in the Deployment specification.
 </details>
 
+
 <details close>
 <summary>Exec into one of the Pod’s container to run Linux commands</summary>
 
-``` css
+```css
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-4m86n   1/1     Running   0          7m23s
 nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          7m23s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          7m23s
+```
 
+```css
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-4m86n bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
 ```
-</details>
 
-
-
-
-<details close>
-<summary>nginx-deployment-5cb44ffccf-4m86n</summary>
-
-```bash
+```css
 root@nginx-deployment-5cb44ffccf-4m86n:/# ls -ltr /etc/nginx/
 total 24
 -rw-r--r-- 1 root root  664 Jul 19 14:05 uwsgi_params
@@ -863,7 +859,7 @@ lrwxrwxrwx 1 root root   22 Jul 19 15:06 modules -> /usr/lib/nginx/modules
 drwxr-xr-x 1 root root   26 Aug 10 04:53 conf.d
 ```
 
-```bash
+```css
 root@nginx-deployment-5cb44ffccf-4m86n:/# cat  /etc/nginx/conf.d/default.conf
 server {
     listen       80;
