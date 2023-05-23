@@ -1,5 +1,6 @@
 # DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
-PROJECT 22
+
+PROJECT 22 showcases the deployment and configuration of an Nginx web server in a Kubernetes cluster. The project involves various steps such as creating a Kubernetes cluster, deploying pods and services, configuring a LoadBalancer, using Deployments and ReplicaSets.
 
 ## UNDERSTANDING THE CONCEPT
 
