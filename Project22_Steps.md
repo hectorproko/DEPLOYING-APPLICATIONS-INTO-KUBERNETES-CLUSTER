@@ -912,14 +912,13 @@ root@nginx-deployment-5cb44ffccf-4m86n:/#
 
 ## PERSISTING DATA FOR PODS
 
-<details close>
-<summary>Multiple-Output</summary>
+When a Pod is deleted in Kubernetes, any data stored within that Pod's container is lost. Pods in Kubernetes are **ephemeral**, meaning they can be created, deleted, and replaced dynamically. This behavior is intentional to ensure scalability, fault-tolerance, and efficient resource utilization.
 
+First we Scale the Pods down to 1 replica.
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           20m
-
 
 hector@hector-Laptop:~/Project22$ kubectl autoscale deployment nginx-deployment --max=1 --min=1
 horizontalpodautoscaler.autoscaling/nginx-deployment autoscaled
@@ -931,25 +930,26 @@ nginx-deployment   3/3     3            3           21m
 hector@hector-Laptop:~/Project22$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   1/1     1            1           21m
+```
 
+Confirming that we currently have only one pod running.
+```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-5cb44ffccf-ws8b5   1/1     Running   0          9m9s
 hector@hector-Laptop:~/Project22$
 ```
-</details>
 
+<!--
 How I figured out to scale https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+-->
 
-`kubectl exec -it nginx-deployment-5cb44ffccf-4m86n bash`
-
-
-<details close>
-<summary>kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash</summary>
+Accessing the running pod *(nginx-deployment-5cb44ffccf-ws8b5)* using `exec`. Performing an `apt-get update` and installing `vim` to enable editing of the **index.html** file.
 
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl exec -it nginx-deployment-5cb44ffccf-ws8b5 bash
 kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+
 root@nginx-deployment-5cb44ffccf-ws8b5:/# apt-get update
 Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [48.4 kB]
@@ -959,96 +959,15 @@ Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Package
 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [2592 B]
 Fetched 8567 kB in 2s (5092 kB/s)
 Reading package lists... Done
+
 root@nginx-deployment-5cb44ffccf-ws8b5:/# apt-get install vim
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
-The following additional packages will be installed:
-  libgpm2 vim-common vim-runtime xxd
-Suggested packages:
-  gpm ctags vim-doc vim-scripts
-The following NEW packages will be installed:
-  libgpm2 vim vim-common vim-runtime xxd
-0 upgraded, 5 newly installed, 0 to remove and 3 not upgraded.
-Need to get 8174 kB of archives.
-After this operation, 36.9 MB of additional disk space will be used.
-Do you want to continue? [Y/n] y
-Get:1 http://deb.debian.org/debian bullseye/main amd64 xxd amd64 2:8.2.2434-3+deb11u1 [192 kB]
-Get:2 http://deb.debian.org/debian bullseye/main amd64 vim-common all 2:8.2.2434-3+deb11u1 [226 kB]
-Get:3 http://deb.debian.org/debian bullseye/main amd64 libgpm2 amd64 1.20.7-8 [35.6 kB]
-Get:4 http://deb.debian.org/debian bullseye/main amd64 vim-runtime all 2:8.2.2434-3+deb11u1 [6226 kB]
-Get:5 http://deb.debian.org/debian bullseye/main amd64 vim amd64 2:8.2.2434-3+deb11u1 [1494 kB]
-Fetched 8174 kB in 0s (91.8 MB/s)
-debconf: delaying package configuration, since apt-utils is not installed
-Selecting previously unselected package xxd.
-(Reading database ... 7823 files and directories currently installed.)
-Preparing to unpack .../xxd_2%3a8.2.2434-3+deb11u1_amd64.deb ...
-Unpacking xxd (2:8.2.2434-3+deb11u1) ...
-Selecting previously unselected package vim-common.
-Preparing to unpack .../vim-common_2%3a8.2.2434-3+deb11u1_all.deb ...
-Unpacking vim-common (2:8.2.2434-3+deb11u1) ...
-Selecting previously unselected package libgpm2:amd64.
-Preparing to unpack .../libgpm2_1.20.7-8_amd64.deb ...
-Unpacking libgpm2:amd64 (1.20.7-8) ...
-Selecting previously unselected package vim-runtime.
-Preparing to unpack .../vim-runtime_2%3a8.2.2434-3+deb11u1_all.deb ...
-Adding 'diversion of /usr/share/vim/vim82/doc/help.txt to /usr/share/vim/vim82/doc/help.txt.vim-tiny by vim-runtime'
-Adding 'diversion of /usr/share/vim/vim82/doc/tags to /usr/share/vim/vim82/doc/tags.vim-tiny by vim-runtime'
-Unpacking vim-runtime (2:8.2.2434-3+deb11u1) ...
-Selecting previously unselected package vim.
-Preparing to unpack .../vim_2%3a8.2.2434-3+deb11u1_amd64.deb ...
-Unpacking vim (2:8.2.2434-3+deb11u1) ...
-Setting up libgpm2:amd64 (1.20.7-8) ...
-Setting up xxd (2:8.2.2434-3+deb11u1) ...
-Setting up vim-common (2:8.2.2434-3+deb11u1) ...
-Setting up vim-runtime (2:8.2.2434-3+deb11u1) ...
-Setting up vim (2:8.2.2434-3+deb11u1) ...
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vim (vim) in auto mode
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vimdiff (vimdiff) in auto mode
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/rvim (rvim) in auto mode
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/rview (rview) in auto mode
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/vi (vi) in auto mode
-update-alternatives: warning: skip creation of /usr/share/man/da/man1/vi.1.gz because associated file /usr/share/man/da/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/de/man1/vi.1.gz because associated file /usr/share/man/de/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/fr/man1/vi.1.gz because associated file /usr/share/man/fr/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/it/man1/vi.1.gz because associated file /usr/share/man/it/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ja/man1/vi.1.gz because associated file /usr/share/man/ja/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/pl/man1/vi.1.gz because associated file /usr/share/man/pl/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ru/man1/vi.1.gz because associated file /usr/share/man/ru/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/man1/vi.1.gz because associated file /usr/share/man/man1/vim.1.gz (of link group vi) doesn't exist
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/view (view) in auto mode
-update-alternatives: warning: skip creation of /usr/share/man/da/man1/view.1.gz because associated file /usr/share/man/da/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/de/man1/view.1.gz because associated file /usr/share/man/de/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/fr/man1/view.1.gz because associated file /usr/share/man/fr/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/it/man1/view.1.gz because associated file /usr/share/man/it/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ja/man1/view.1.gz because associated file /usr/share/man/ja/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/pl/man1/view.1.gz because associated file /usr/share/man/pl/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ru/man1/view.1.gz because associated file /usr/share/man/ru/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/man1/view.1.gz because associated file /usr/share/man/man1/vim.1.gz (of link group view) doesn't exist
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/ex (ex) in auto mode
-update-alternatives: warning: skip creation of /usr/share/man/da/man1/ex.1.gz because associated file /usr/share/man/da/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/de/man1/ex.1.gz because associated file /usr/share/man/de/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/fr/man1/ex.1.gz because associated file /usr/share/man/fr/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/it/man1/ex.1.gz because associated file /usr/share/man/it/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ja/man1/ex.1.gz because associated file /usr/share/man/ja/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/pl/man1/ex.1.gz because associated file /usr/share/man/pl/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ru/man1/ex.1.gz because associated file /usr/share/man/ru/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/man1/ex.1.gz because associated file /usr/share/man/man1/vim.1.gz (of link group ex) doesn't exist
-update-alternatives: using /usr/bin/vim.basic to provide /usr/bin/editor (editor) in auto mode
-update-alternatives: warning: skip creation of /usr/share/man/da/man1/editor.1.gz because associated file /usr/share/man/da/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/de/man1/editor.1.gz because associated file /usr/share/man/de/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/fr/man1/editor.1.gz because associated file /usr/share/man/fr/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/it/man1/editor.1.gz because associated file /usr/share/man/it/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ja/man1/editor.1.gz because associated file /usr/share/man/ja/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/pl/man1/editor.1.gz because associated file /usr/share/man/pl/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/ru/man1/editor.1.gz because associated file /usr/share/man/ru/man1/vim.1.gz (of link group editor) doesn't exist
-update-alternatives: warning: skip creation of /usr/share/man/man1/editor.1.gz because associated file /usr/share/man/man1/vim.1.gz (of link group editor) doesn't exist
-Processing triggers for libc-bin (2.31-13+deb11u3) ...
+...
 ```
-</details>
 
-<details close>
-<summary>cat /usr/share/nginx/html/index.html</summary>
+After editing the page, we modify it to display the message "**Welcome to an EDITED PAGE!**". To confirm the changes, we can check the content of the index.html file by running the command `cat /usr/share/nginx/html/index.html`.
 
 ``` css
 root@nginx-deployment-5cb44ffccf-ws8b5:/# cat /usr/share/nginx/html/index.html
@@ -1077,10 +996,11 @@ Commercial support is available at
 </html>
 root@nginx-deployment-5cb44ffccf-ws8b5:/#
 ```
-</details>
 
+Below is the updated output of the page viewed in a web browser after editing the content of the pod  
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/editedPage.png
-)
+)  
 
+Below we see what happens when we delete the pod and refresh the page. We lose the change made in **index.html**  
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/editedNginxPage.gif)
 
