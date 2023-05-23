@@ -913,6 +913,7 @@ root@nginx-deployment-5cb44ffccf-4m86n:/#
 </details>
 
 ## PERSISTING DATA FOR PODS
+*([In Project 23, we demonstrate how to persist data](https://github.com/hectorproko/PERSISTING-DATA-IN-KUBERNETES/blob/main/Project23_Steps.md))*  
 
 When a Pod is deleted in Kubernetes, any data stored within that Pod's container is lost. Pods in Kubernetes are **ephemeral**, meaning they can be created, deleted, and replaced dynamically. This behavior is intentional to ensure scalability, fault-tolerance, and efficient resource utilization.
 
