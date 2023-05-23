@@ -20,7 +20,8 @@ Self Side Task
 - NodePort service type exposes the service on a static port on the node's IP address.
 - NodePorts are in the range of 30000-32767 by default.
 - NodePort allows direct access to the application using the node's public IP address and appended port.
-- Inbound traffic to the NodePort range needs to be allowed in the EC2's Security Group.
+- Inbound traffic to the NodePort range needs to be allowed in the EC2's Security Group.  
+*(NodePort is typically used for accessing services from outside the cluster when there is no cloud provider load balancer available)*  
 
 #### Maintaining Desired Number of Pods
 - ReplicaSet (RS) object ensures a stable set of pod replicas running.
