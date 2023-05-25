@@ -94,7 +94,7 @@ hector@hector-Laptop:~/Project22$
 
 As per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
 
-Create a cluster IAM role and attach the required Amazon EKS IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on your behalf to manage the resources that you use with the service.
+Create a cluster IAM role and attach the required Amazon EKS IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on our behalf to manage the resources that we use with the service.
 
 1. We create file `cluster-role-trust-policy.json`.  
     ```css
@@ -250,7 +250,7 @@ hector@hector-Laptop:~/Project22$
 
 
 <details close>
-<summary>Once you delete the Node group, whatever pod was running disappears</summary>
+<summary>Once we delete the Node group, whatever pod was running disappears</summary>
 
 ``` css
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
@@ -372,7 +372,7 @@ Commercial support is available at
 
 
 *Assuming that the requirement is to access the Nginx Pod internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another Pod is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
-*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, you do not need to use an IP address. Rather, you can simply refer to the service name directly.*
+*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, we do not need to use an IP address. Rather, we can simply refer to the service name directly.*
 
 
 Since we want to provide access to the **Nginx Pod** from the outside world, such as a web browser, we create a Service.
@@ -401,7 +401,7 @@ hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service created
 ```
 
-To verify that the Service is created, run `kubectl get service` command. This will list the Services in your cluster, including the newly created nginx-service.
+To verify that the Service is created, run `kubectl get service` command. This will list the Services in our cluster, including the newly created nginx-service.
 ```
 hector@hector-Laptop:~/Project22$ kubectl get service
 NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
@@ -416,7 +416,7 @@ hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
 ```
 
-To establish the required connection, you need to modify the Pod manifest to include **labels** that align with the **selectors** specified in the Service manifest.
+To establish the required connection, we need to modify the Pod manifest to include **labels** that align with the **selectors** specified in the Service manifest.
 
 1. Deleted the existing Pod to start fresh `kubectl delete pod nginx-pod`
 2. Updated the YAML manifest file of the pod `nginx-pod.yaml` with the necessary changes (added labels)
@@ -443,7 +443,7 @@ To establish the required connection, you need to modify the Pod manifest to inc
     pod/nginx-pod created
     ```
 
-This output signifies that now the port forwarding is functioning correctly. Requests made to `127.0.0.1:8089` or `[::1]:8089` on your local machine will be redirected to port 80 of the Nginx service.  
+This output signifies that now the port forwarding is functioning correctly. Requests made to `127.0.0.1:8089` or `[::1]:8089` on our local machine will be redirected to port 80 of the Nginx service.  
 ```css
 hector@hector-Laptop:~/Project22$ kubectl  port-forward svc/nginx-service 8089:80
 Forwarding from 127.0.0.1:8089 -> 80
@@ -723,9 +723,9 @@ hector@hector-Laptop:~/Project22$
 ```
 </details>
 
-*A clusterIP key is updated in the manifest and assigned an IP address. Even though you have specified a Loadbalancer service type, internally it still requires a clusterIP to route the external traffic through.*
+*A clusterIP key is updated in the manifest and assigned an IP address. Even though we have specified a Loadbalancer service type, internally it still requires a clusterIP to route the external traffic through.*
 
-*In the ports section, nodePort is still used. This is because Kubernetes still needs to use a dedicated port on the worker node to route the traffic through. Ensure that port range 30000-32767 is opened in your inbound Security Group configuration.*
+*In the ports section, nodePort is still used. This is because Kubernetes still needs to use a dedicated port on the worker node to route the traffic through. Ensure that port range 30000-32767 is opened in our inbound Security Group configuration.*
 
 
 Using the DNS name of the load balancer `a0e08a526ccb04426acb64895c03dc0d-651336585.us-east-1.elb.amazonaws.com`, I tested the service by accessing it in a web browser.
