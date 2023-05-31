@@ -1,6 +1,6 @@
 # DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER
 
-PROJECT 22 showcases the deployment and configuration of an Nginx web server in a Kubernetes cluster. The project involves various steps such as creating a Kubernetes cluster, deploying pods and services, configuring a LoadBalancer, using Deployments and ReplicaSets.
+PROJECT 22 showcases the deployment and configuration of an Nginx web server in a Kubernetes cluster. The project involves various steps such as creating a Kubernetes cluster, deploying pods and services, configuring a LoadBalancer, using Deployments and **ReplicaSets**.
 
 ## UNDERSTANDING THE CONCEPT
 
@@ -24,10 +24,10 @@ Self Side Task
 *(NodePort is typically used for accessing services from outside the cluster when there is no cloud provider load balancer available)*  
 
 #### Maintaining Desired Number of Pods
-- ReplicaSet (RS) object ensures a stable set of pod replicas running.
+- **ReplicaSet** (**RS**) object ensures a stable set of pod replicas running.
 - RS guarantees the availability of a specified number of identical pods.
 
-*Note: ReplicaSets are recommended over the older ReplicationController (RC) object.*
+*Note: **ReplicaSets** are recommended over the older ReplicationController (RC) object.*
 
 ## COMMON KUBERNETES OBJECTS  
 
@@ -465,7 +465,7 @@ When we execute the command `lynx 127.0.0.1:8089`, the Nginx web page will appea
 
 ## CREATE A REPLICA SET
 
-Let us create a **rs.yaml** manifest for a ReplicaSet object. ReplicaSet (RS) object ensures a stable set of pod replicas running
+Let us create a **rs.yaml** manifest for a **ReplicaSet** object. **ReplicaSet** (**RS**) object ensures a stable set of pod replicas running
 
 ```css
 # Part 1
@@ -494,12 +494,12 @@ spec:
 
 ```
 
-The ReplicaSet named **nginx-rs** was created successfully.  
+The **ReplicaSet** named **nginx-rs** was created successfully.  
 ```css
 hector@hector-Laptop:~/Project22$ kubectl apply -f rs.yaml
 replicaset.apps/nginx-rs created
 ```
-Listed the pods using `kubectl get pods` command. It shows the status of the existing pods, including nginx-pod and the pods managed by the ReplicaSet (**nginx-rs-6qshv** and **nginx-rs-ch9tp**).  
+Listed the pods using `kubectl get pods` command. It shows the status of the existing pods, including nginx-pod and the pods managed by the **ReplicaSet** (**nginx-rs-6qshv** and **nginx-rs-ch9tp**).  
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
@@ -508,13 +508,13 @@ nginx-rs-6qshv   1/1     Running   0          17m
 nginx-rs-ch9tp   1/1     Running   0          17m
 ```
 
-Deleting one of the ReplicaSet pods **nginx-rs-ch9tp** 
+Deleting one of the **ReplicaSet** pods **nginx-rs-ch9tp** 
 ```
 hector@hector-Laptop:~/Project22$ kubectl delete pod nginx-rs-ch9tp
 pod "nginx-rs-ch9tp" deleted
 ```
 
-Listing the pods it shows that a new ReplicaSet pod **nginx-rs-tqvs8** was created to maintain the desired number of replicas.  
+Listing the pods it shows that a new **ReplicaSet** pod **nginx-rs-tqvs8** was created to maintain the desired number of replicas.  
 ```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
@@ -523,7 +523,7 @@ nginx-rs-6qshv   1/1     Running   0          18m
 nginx-rs-tqvs8   1/1     Running   0          21s
 ```
 
-Listing the ReplicaSets shows **nginx-rs** with the desired, current, and ready replicas set to 3. 
+Listing the **ReplicaSets** shows **nginx-rs** with the desired, current, and ready replicas set to 3. 
 ```
 hector@hector-Laptop:~/Project22$ kubectl get rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES         SELECTOR
@@ -557,14 +557,14 @@ Events:
   Normal  SuccessfulCreate  106s  replicaset-controller  Created pod: nginx-rs-tqvs8
 ```
 
-**Scaling the ReplicaSet:** We can use the **imperative** command `kubectl scale` to scale up the ReplicaSet named **nginx-rs** to have 5 replicas.  
+**Scaling the ReplicaSet:** We can use the **imperative** command `kubectl scale` to scale up the **ReplicaSet** named **nginx-rs** to have 5 replicas.  
 
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-rs --replicas=5
 replicaset.apps/nginx-rs scaled
 ```
 
-There are now a total of 5 pods running, including the original nginx-pod and the newly created pods by the ReplicaSet.
+There are now a total of 5 pods running, including the original nginx-pod and the newly created pods by the **ReplicaSet**.
 ```
 hector@hector-Laptop:~/Project22$ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
@@ -575,21 +575,21 @@ nginx-rs-hkpfm   1/1     Running   0          26s
 nginx-rs-tqvs8   1/1     Running   0          5m6s
 hector@hector-Laptop:~/Project22$
 ```
-The ReplicaSet nginx-rs has been scaled to have 5 replicas.
+The **ReplicaSet** name **nginx-rs** has been scaled to have 5 replicas.
 ``` css
 hector@hector-Laptop:~/Project22$ kubectl get rs
 NAME       DESIRED   CURRENT   READY   AGE
 nginx-rs   5         5         5       29m
 ```
 
-Deleting previous ReplicaSet
+Deleting previous **ReplicaSet**
 ```
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
 hector@hector-Laptop:~/Project22$
 ```
 
-The new ReplicaSet manifest `rs2.yaml` introduces more advanced label selection and customization options.
+The new **ReplicaSet** manifest `rs2.yaml` introduces more advanced label selection and customization options.
 ``` css
 hector@hector-Laptop:~/Project22$ cat rs2.yaml
 apiVersion: apps/v1
@@ -618,13 +618,13 @@ spec:
           protocol: TCP
 ```
 
-The new ReplicaSet **nginx-rs** with the advanced label selection and customization options has been created.  
+The new **ReplicaSet** `nginx-rs` with the advanced label selection and customization options has been created.  
 ```
 hector@hector-Laptop:~/Project22$ kubectl apply -f rs2.yaml
 replicaset.apps/nginx-rs created
 ```
 
-The ReplicaSet `nginx-rs` now has a desired replica count of 3, and all replicas are running and ready. The selector specifies that the replicas should have labels matching `env=prod` and `tier=frontend`.  
+The **ReplicaSet** `nginx-rs` now has a desired replica count of 3, and all replicas are running and ready. The selector specifies that the replicas should have labels matching `env=prod` and `tier=frontend`.  
 ```
 hector@hector-Laptop:~/Project22$ kubectl get rs nginx-rs -o wide
 NAME       DESIRED   CURRENT   READY   AGE   CONTAINERS        IMAGES         SELECTOR
@@ -632,7 +632,7 @@ nginx-rs   3         3         3       15s   nginx-container   nginx:latest   en
 ```
 
 
-## USING AWS LOAD BALANCER TO ACCESS YOUR SERVICE IN KUBERNETES.
+## USING AWS LOAD BALANCER TO ACCESS OUR SERVICE IN KUBERNETES.
 
 We previously used the ClusterIP service type to access the Nginx service internally. Now, we'll switch to the LoadBalancer service type, which creates an actual load balancer in AWS. This allows us to expose the Nginx service to the external world and benefit from load balancing capabilities provided by the external load balancer. <br>
 
@@ -738,7 +738,7 @@ Using the DNS name of the load balancer `a0e08a526ccb04426acb64895c03dc0d-651336
 
 Officially, it is highly recommended to use Deployments to manage replica sets rather than using replica sets directly.  
 
-A Deployment is another layer above ReplicaSets and Pods, newer and more advanced level concept than ReplicaSets. It manages the deployment of ReplicaSets and allows for easy updating of a ReplicaSet as well as the ability to roll back to a previous version of deployment. It is declarative and can be used for rolling updates of micro-services, ensuring there is no downtime.  
+A Deployment is another layer above **ReplicaSets** and Pods, newer and more advanced level concept than **ReplicaSets**. It manages the deployment of **ReplicaSets** and allows for easy updating of a **ReplicaSet** as well as the ability to roll back to a previous version of deployment. It is declarative and can be used for rolling updates of micro-services, ensuring there is no downtime.  
 
 <!--
 If I scale to 15 with the name of the replicate set, it is brought down to 3, because the replicaset was a result of a deployment and the demployment is set to 3, so terminates untils it goes down to 3
@@ -751,7 +751,7 @@ If I scale to 15 with the name of the replicate set, it is brought down to 3, be
 hector@hector-Laptop:~/Project22$ kubectl delete rs nginx-rs
 replicaset.apps "nginx-rs" deleted
 ```
-Initially, we created a Deployment, specifying 3 replicas of a pod running the nginx container. This Deployment automatically created a ReplicaSet to manage these pods, maintaining the desired state of 3 active nginx pods
+Initially, we created a Deployment, specifying 3 replicas of a pod running the nginx container. This Deployment automatically created a **ReplicaSet** to manage these pods, maintaining the desired state of 3 active nginx pods
 ```
 hector@hector-Laptop:~/Project22$ cat deployment.yaml
 apiVersion: apps/v1
@@ -798,7 +798,7 @@ nginx-deployment-5cb44ffccf-8rrkf   1/1     Running   0          44s
 nginx-deployment-5cb44ffccf-p8w6q   1/1     Running   0          44s
 ```
 
-Later, we attempted to manually scale the ReplicaSet to 15 replicas using the 'kubectl scale' command. However, as the ReplicaSet is managed by a Deployment, the Deployment immediately noticed this change and reverted it back to the desired state of 3 replicas. This was evident from the 'Terminating' status of the additional pods.
+Later, we attempted to manually scale the **ReplicaSet** to 15 replicas using the `kubectl scale` command. However, as the **ReplicaSet** is managed by a Deployment, the Deployment immediately noticed this change and reverted it back to the desired state of 3 replicas. This was evident from the 'Terminating' status of the additional pods.
 ```
 hector@hector-Laptop:~/Project22$ kubectl scale rs nginx-deployment-5cb44ffccf --replicas=15
 replicaset.apps/nginx-deployment-5cb44ffccf scaled
@@ -829,7 +829,7 @@ NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           5m52s
 ```
 
-This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a ReplicaSet is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the ReplicaSet are overridden by the Deployment to maintain the state defined in the Deployment specification.
+This exercise essentially illustrates the declarative nature of Deployments in Kubernetes. When a **ReplicaSet** is managed by a Deployment, the Deployment ensures that the desired state is preserved. Any manual changes to the **ReplicaSet** are overridden by the Deployment to maintain the state defined in the Deployment specification.
 </details>
 
 
