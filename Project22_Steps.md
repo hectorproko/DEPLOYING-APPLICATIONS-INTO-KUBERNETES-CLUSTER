@@ -158,7 +158,7 @@ Create a cluster **IAM** role and attach the required Amazon **EKS** **IAM** man
 **Creating Cluster** 
 
 <details close>
-<summary>Using the Console (web-based graphical user interface):</summary>
+<summary>Using the <b>Console</b> (web-based graphical user interface):</summary>
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusters.png)
 
