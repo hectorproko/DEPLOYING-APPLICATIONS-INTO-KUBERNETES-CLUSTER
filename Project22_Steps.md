@@ -94,7 +94,7 @@ hector@hector-Laptop:~/Project22$
 
 As per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
 
-Create a cluster IAM role and attach the required Amazon EKS IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on our behalf to manage the resources that we use with the service.
+Create a cluster IAM role and attach the required Amazon **EKS** IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on our behalf to manage the resources that we use with the service.
 
 1. We create file `cluster-role-trust-policy.json`.  
     ```css
@@ -143,7 +143,7 @@ Create a cluster IAM role and attach the required Amazon EKS IAM managed policy 
     }
     ```
 
-3. Attach the required Amazon EKS managed IAM policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
+3. Attach the required Amazon **EKS** managed **IAM** policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
 
     `attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
 
@@ -188,7 +188,7 @@ We need to specify the IDs of the VPC we want when creating cluster from **AWS C
 
 
 <details close>
-<summary>Using AWS CLI:</summary>
+<summary>Using <b>AWS CLI</b>:</summary>
 
 ```css
 hector@hector-Laptop:~/Project22$ aws eks create-cluster --profile kube --region us-east-1 --name Project22 --kubernetes-version 1.22 \
@@ -216,7 +216,7 @@ hector@hector-Laptop:~/Project22$
 
 - Deleted the existing kubeconfig file located at `~/.kube/config` to make way for a new configuration.  
 
-- This AWS CLI command is used to update the kubeconfig file with the necessary configuration for accessing the EKS cluster named "Project22" in the AWS region "us-east-1". The --profile option specifies the AWS profile to use for authentication and authorization.  
+- This **AWS CLI** command is used to update the kubeconfig file with the necessary configuration for accessing the **EKS** cluster named "Project22" in the AWS region "us-east-1". The --profile option specifies the AWS profile to use for authentication and authorization.  
   ``` css
   hector@hector-Laptop:~/Project22$ aws eks update-kubeconfig --profile kube --region us-east-1 --name Project22
   Added new context arn:aws:eks:us-east-1:199055125796:cluster/Project22 to /home/hector/.kube/config
@@ -233,14 +233,14 @@ hector@hector-Laptop:~/Project22$
   ```
   ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/clusterinfo.png)
 
-- I attempted to create a Pod in the Kubernetes cluster, the Pod remained in the "Pending" state.   
-*(In Kubernetes, a "Pending" status means that the Pod has been scheduled to run on a node but is waiting for the necessary resources, such as CPU and memory, to become available)*  
+- I attempted to create a **Pod** in the Kubernetes cluster, the **Pod** remained in the "Pending" state.   
+*(In Kubernetes, a "Pending" status means that the **Pod** has been scheduled to run on a node but is waiting for the necessary resources, such as CPU and memory, to become available)*  
 
 - The cause was that the cluster had no active worker nodes available to schedule  and run Pods.  
 *(Worker nodes are responsible for executing and hosting Pods in a Kubernetes cluster)*
 
-- To address the problem, I had to create a Node group.  
-  (Node groups are a way to provision and manage worker nodes in an Amazon EKS cluster. By creating a Node group, we added worker nodes to the cluster, providing the necessary resources for Pods to be scheduled and run)
+- To address the problem, I had to create a **Node group**.  
+  (**Node group**s are a way to provision and manage worker nodes in an Amazon **EKS** cluster. By creating a **Node group**, we added worker nodes to the cluster, providing the necessary resources for Pods to be scheduled and run)
 
   ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/configureNodeGroup.png)
   *(Everything else defaults)*
@@ -250,7 +250,7 @@ hector@hector-Laptop:~/Project22$
 
 
 <details close>
-<summary>Once we delete the Node group, whatever pod was running disappears</summary>
+<summary>Once we delete the <b>Node group</b>, whatever <b>pod</b> was running disappears</summary>
 
 ``` css
 hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
@@ -283,7 +283,7 @@ nginx-pod   1/1     Running   0          31s   192.168.13.153   ip-192-168-10-26
 
 ## ACCESSING THE APP FROM THE BROWSER
 
-Let's create a Pod named **nginx-pod** by defining a YAML manifest on master node.  
+Let's create a **Pod** named **nginx-pod** by defining a YAML manifest on master node.  
 
 ```css
 sudo cat <<EOF | sudo tee ./nginx-pod.yaml
@@ -300,9 +300,9 @@ spec:
       protocol: TCP
 EOF
 ```
-We should have a YAML file named nginx-pod.yaml with the necessary specifications for the Pod. It defines a single container running the latest version of the nginx image, named **nginx-pod**. Port 80 is exposed using the TCP protocol.
+We should have a YAML file named nginx-pod.yaml with the necessary specifications for the **Pod**. It defines a single container running the latest version of the nginx image, named **nginx-pod**. Port 80 is exposed using the TCP protocol.
 
-To create the Pod we apply the manifest using `kubectl`  
+To create the **Pod** we apply the manifest using `kubectl`  
 ```css
 kubectl apply -f nginx-pod.yaml
 pod/nginx-pod created <<< output
@@ -371,8 +371,8 @@ Commercial support is available at
 
 
 
-*Assuming that the requirement is to access the Nginx Pod internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another Pod is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
-*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a Pod IP that is running and forwards the request to it. This way, we do not need to use an IP address. Rather, we can simply refer to the service name directly.*
+*Assuming that the requirement is to access the Nginx **Pod** internally, using the Pod’s IP address directly is not a reliable choice because Pods are ephemeral. They are not designed to run forever. When they die and another **Pod** is brought back up, the IP address will change and any application that is using the previous IP address directly will break.*  
+*To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a **Pod** IP that is running and forwards the request to it. This way, we do not need to use an IP address. Rather, we can simply refer to the service name directly.*
 
 
 Since we want to provide access to the **Nginx Pod** from the outside world, such as a web browser, we create a Service.
@@ -410,15 +410,15 @@ nginx-service   ClusterIP   10.100.15.31   <none>        80/TCP    64s
 ```
 *(The output will show the CLUSTER-IP, PORT(S), and other information about the Service. Note that the EXTERNAL-IP is \<none> at this stage, indicating that the Service is not yet externally accessible)*  
 
-Attempting to port forward using `kubectl port-forward` command to forward traffic from local port 8089 to port 80 of the nginx-service results in a timeout error. This error occurs because the Pod associated with the Service does not have the necessary labels for the Service to select it.
+Attempting to port forward using `kubectl port-forward` command to forward traffic from local port 8089 to port 80 of the nginx-service results in a timeout error. This error occurs because the **Pod** associated with the Service does not have the necessary labels for the Service to select it.
 ```
 hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
 ```
 
-To establish the required connection, we need to modify the Pod manifest to include **labels** that align with the **selectors** specified in the Service manifest.
+To establish the required connection, we need to modify the **Pod** manifest to include **labels** that align with the **selectors** specified in the Service manifest.
 
-1. Deleted the existing Pod to start fresh `kubectl delete pod nginx-pod`
+1. Deleted the existing **Pod** to start fresh `kubectl delete pod nginx-pod`
 2. Updated the YAML manifest file of the pod `nginx-pod.yaml` with the necessary changes (added labels)
     ``` css
     hector@hector-Laptop:~/Project22$ cat nginx-pod.yaml
@@ -454,7 +454,7 @@ Handling connection for 8089
 
 
 
-When we execute the command `lynx 127.0.0.1:8089`, the Nginx web page will appear in the lynx text-based web browser. This confirms that we can now access the Nginx service running on the Pod through the forwarded port.  
+When we execute the command `lynx 127.0.0.1:8089`, the Nginx web page will appear in the lynx text-based web browser. This confirms that we can now access the Nginx service running on the **Pod** through the forwarded port.  
 
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/testingNginxPod.gif)
 
@@ -915,7 +915,7 @@ root@nginx-deployment-5cb44ffccf-4m86n:/#
 ## PERSISTING DATA FOR PODS
 *(In [Project 23](https://github.com/hectorproko/PERSISTING-DATA-IN-KUBERNETES/blob/main/Project23_Steps.md), we demonstrate how to persist data)*  
 
-When a Pod is deleted in Kubernetes, any data stored within that Pod's container is lost. Pods in Kubernetes are **ephemeral**, meaning they can be created, deleted, and replaced dynamically. This behavior is intentional to ensure scalability, fault-tolerance, and efficient resource utilization.
+When a **Pod** is deleted in Kubernetes, any data stored within that **Pod**'s container is lost. Pods in Kubernetes are **ephemeral**, meaning they can be created, deleted, and replaced dynamically. This behavior is intentional to ensure scalability, fault-tolerance, and efficient resource utilization.
 
 First we Scale the Pods down to 1 replica.
 ``` css
