@@ -94,7 +94,7 @@ hector@hector-Laptop:~/Project22$
 
 As per [aws documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html)
 
-Create a cluster IAM role and attach the required Amazon **EKS** IAM managed policy to it. Kubernetes clusters managed by Amazon EKS make calls to other AWS services on our behalf to manage the resources that we use with the service.
+Create a cluster **IAM** role and attach the required Amazon **EKS** **IAM** managed policy to it. Kubernetes clusters managed by Amazon **EKS** make calls to other AWS services on our behalf to manage the resources that we use with the service.
 
 1. We create file `cluster-role-trust-policy.json`.  
     ```css
@@ -145,7 +145,7 @@ Create a cluster IAM role and attach the required Amazon **EKS** IAM managed pol
 
 3. Attach the required Amazon **EKS** managed **IAM** policy (**AmazonEKSClusterPolicy**) to the role (**myAmazonEKSClusterRole**).
 
-    `attach-role-policy` is used to attach an IAM policy to an existing role, granting permissions and actions to the role.  
+    `attach-role-policy` is used to attach an **IAM** policy to an existing role, granting permissions and actions to the role.  
 
     ```css
     hector@hector-Laptop:~$ aws iam attach-role-policy \
@@ -375,7 +375,7 @@ Commercial support is available at
 *To solve this problem, kubernetes uses **Service** – An object that abstracts the underlining IP addresses of Pods. A service can serve as a load balancer, and a reverse proxy which basically takes the request using a human readable DNS name, resolves to a **Pod** IP that is running and forwards the request to it. This way, we do not need to use an IP address. Rather, we can simply refer to the service name directly.*
 
 
-Since we want to provide access to the **Nginx Pod** from the outside world, such as a web browser, we create a Service.
+Since we want to provide access to the **Nginx Pod** from the outside world, such as a web browser, we create a **Service**.
 
 1. Create a Service `yaml` manifest file `nginx-service.yaml`
 
@@ -395,28 +395,28 @@ spec:
       targetPort: 80
 ```
 
-Apply the manifest using the `kubectl apply -f nginx-service.yaml` command. This creates the Service in the Kubernetes cluster.
+Apply the manifest using the `kubectl apply -f nginx-service.yaml` command. This creates the **Service** in the Kubernetes cluster.
 ```
 hector@hector-Laptop:~/Project22$ kubectl apply -f nginx-service.yaml
 service/nginx-service created
 ```
 
-To verify that the Service is created, run `kubectl get service` command. This will list the Services in our cluster, including the newly created nginx-service.
+To verify that the **Service** is created, run `kubectl get service` command. This will list the Services in our cluster, including the newly created nginx-service.
 ```
 hector@hector-Laptop:~/Project22$ kubectl get service
 NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 kubernetes      ClusterIP   10.100.0.1     <none>        443/TCP   56m
 nginx-service   ClusterIP   10.100.15.31   <none>        80/TCP    64s
 ```
-*(The output will show the CLUSTER-IP, PORT(S), and other information about the Service. Note that the EXTERNAL-IP is \<none> at this stage, indicating that the Service is not yet externally accessible)*  
+*(The output will show the CLUSTER-IP, PORT(S), and other information about the **Service**. Note that the EXTERNAL-IP is \<none> at this stage, indicating that the **Service** is not yet externally accessible)*  
 
-Attempting to port forward using `kubectl port-forward` command to forward traffic from local port 8089 to port 80 of the nginx-service results in a timeout error. This error occurs because the **Pod** associated with the Service does not have the necessary labels for the Service to select it.
+Attempting to port forward using `kubectl port-forward` command to forward traffic from local port 8089 to port 80 of the nginx-service results in a timeout error. This error occurs because the **Pod** associated with the **Service** does not have the necessary labels for the **Service** to select it.
 ```
 hector@hector-Laptop:~/Project22$ kubectl port-forward svc/nginx-service 8089:80
 error: timed out waiting for the condition
 ```
 
-To establish the required connection, we need to modify the **Pod** manifest to include **labels** that align with the **selectors** specified in the Service manifest.
+To establish the required connection, we need to modify the **Pod** manifest to include **labels** that align with the **selectors** specified in the **Service** manifest.
 
 1. Deleted the existing **Pod** to start fresh `kubectl delete pod nginx-pod`
 2. Updated the YAML manifest file of the pod `nginx-pod.yaml` with the necessary changes (added labels)
@@ -676,7 +676,7 @@ If we navigate to the AWS console, we can confirm that the Load Balancer was cre
 ![logo](https://raw.githubusercontent.com/hectorproko/DEPLOYING-APPLICATIONS-INTO-KUBERNETES-CLUSTER/main/images/tags.png)  
 
 
-In the following command output, we are retrieving the YAML representation of the nginx-service Service object. The YAML provides detailed information about the service configuration, including annotations, creation timestamp, finalizers, metadata, spec, and status.
+In the following command output, we are retrieving the YAML representation of the nginx-service **Service** object. The YAML provides detailed information about the service configuration, including annotations, creation timestamp, finalizers, metadata, spec, and status.
 
 <details close>
 <summary>kubectl get service nginx-service -o yaml</summary>
